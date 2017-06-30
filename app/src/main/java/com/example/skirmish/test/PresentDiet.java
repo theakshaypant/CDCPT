@@ -1,11 +1,13 @@
 package com.example.skirmish.test;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -23,11 +25,31 @@ public class PresentDiet extends AppCompatActivity {
 
     private float[]yData={123f, 67f, 34f, 97f};
     String []yPercent=new String[yData.length];
-    private String[]xData={"Carbohydrates", "Fats", "Protein", "Vegetables"};
+    private String[]xData={"Carbohydrates", "Proteins", "Fats", "Vitamins"};
     PieChart pieChart;
     Button nextButton;
     private String usr;
     private String patient;
+    Food_db foods = new Food_db(this);
+    String[] nut;
+    int[] nut_im;
+    ArrayList<Integer> values = new ArrayList<>();
+    String[] fats = {"Cheese", "Nuts and Seeds"};
+    String[] carbo = {"Milk", "Potato"};
+    String[] prot = {"Paneer", "Dal"};
+    String[] vit = {"Cheese", "Nuts and Seeds"};
+
+
+    int[] carboq=new int[carbo.length];
+    int[] fatsq=new int[fats.length];
+    int[] protq=new int[prot.length];
+    int[] vitq=new int[vit.length];
+
+    String[] nutrients={"Carbohydrates","Fats","Proteins","Vitamins"};
+
+    Cursor c;
+    int i;
+
 
     private void calcPercent(){
         float[]yPerc=new float[yPercent.length];
@@ -48,6 +70,45 @@ public class PresentDiet extends AppCompatActivity {
         usr = getIntent().getStringExtra("usr");
         patient = getIntent().getStringExtra("patient");
 
+
+        c=foods.getData(Integer.parseInt(this.patient),0);
+        for(i=0;i<carbo.length;i++){
+            carboq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),1);
+        for(i=0;i<fats.length;i++){
+            fatsq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),2);
+        for(i=0;i<prot.length;i++){
+            protq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),3);
+        for(i=0;i<vit.length;i++){
+            vitq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+
+        int sum[]={0,0,0,0};
+        final String[] data2={"carbo","fat","prot","vitamin",};
+        for(i=0;i<carboq.length;i++){
+            sum[0]=sum[0]+carboq[i];
+        }
+        for(i=0;i<fatsq.length;i++){
+            sum[1]=sum[1]+fatsq[i];
+        }
+        for(i=0;i<protq.length;i++){
+            sum[2]=sum[2]+protq[i];
+        }
+        for(i=0;i<vitq.length;i++){
+            sum[3]=sum[3]+vitq[i];
+        }
+
+        int temp=0;
+        for(i=0;i<values.size();i++){
+            temp=temp+values.get(i);
+        }
+
+
         nextButton=(Button) findViewById(R.id.button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +127,7 @@ public class PresentDiet extends AppCompatActivity {
         //  dataString=o.getAllContacts("maya");
         //   Log.d("Current & Ideal Diet", "Cone");
         for(int i=0; i<yData.length; i++) {
-            yData[i] = (dataString[i]);
+            yData[i] = sum[i];//(dataString[i]);
         }
         pieChart=(PieChart) findViewById(R.id.idPieChart);
         //pieChart.setDescription("आपकी Present Diet");

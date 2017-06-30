@@ -1,6 +1,7 @@
 package com.example.skirmish.test;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,26 @@ public class CurrentAndIdealDiet extends AppCompatActivity {
     String name; //temp
     private String usr;
     private String patient;
+    Food_db foods = new Food_db(this);
+    String[] nut;
+    int[] nut_im;
+    ArrayList<Integer> values = new ArrayList<>();
+    String[] fats = {"Cheese", "Nuts and Seeds"};
+    String[] carbo = {"Milk", "Potato"};
+    String[] prot = {"Paneer", "Dal"};
+    String[] vit = {"Cheese", "Nuts and Seeds"};
+
+
+    int[] carboq=new int[carbo.length];
+    int[] fatsq=new int[fats.length];
+    int[] protq=new int[prot.length];
+    int[] vitq=new int[vit.length];
+
+    String[] nutrients={"Carbohydrates","Fats","Proteins","Vitamins"};
+
+    Cursor c;
+    int i;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +63,40 @@ public class CurrentAndIdealDiet extends AppCompatActivity {
         dataString =p.getArray(Integer.parseInt(patient));
       //  dataString=o.getAllContacts("maya");
         //   Log.d("Current & Ideal Diet", "Cone");
+        c=foods.getData(Integer.parseInt(this.patient),0);
+        for(i=0;i<carbo.length;i++){
+            carboq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),1);
+        for(i=0;i<fats.length;i++){
+            fatsq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),2);
+        for(i=0;i<prot.length;i++){
+            protq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+        c=foods.getData(Integer.parseInt(this.patient),3);
+        for(i=0;i<vit.length;i++){
+            vitq[i]=(Integer.parseInt(c.getString(i+1)));
+        }
+
+        int sum[]={0,0,0,0};
+        final String[] data2={"carbo","fat","prot","vitamin",};
+        for(i=0;i<carboq.length;i++){
+            sum[0]=sum[0]+carboq[i];
+        }
+        for(i=0;i<fatsq.length;i++){
+            sum[1]=sum[1]+fatsq[i];
+        }
+        for(i=0;i<protq.length;i++){
+            sum[2]=sum[2]+protq[i];
+        }
+        for(i=0;i<vitq.length;i++){
+            sum[3]=sum[3]+vitq[i];
+        }
+
         for(int i=0; i<yData.length; i++) {
-            yData[i] = (dataString[i]);
+            yData[i] = sum[i];//(dataString[i]);
         }
 
 
@@ -138,9 +191,10 @@ public class CurrentAndIdealDiet extends AppCompatActivity {
     }
 
     private void updateYData() {
+        int  par[]={10,3,4,2};
         for(int i=0; i<yData.length; i++) {
             yData2[i]=yData[i];
-            yData[i] *= Math.random();
+            yData[i] = par[i];//Math.random();
         }
     }
 

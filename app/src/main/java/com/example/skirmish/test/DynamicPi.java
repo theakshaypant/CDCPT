@@ -48,14 +48,19 @@ public class DynamicPi extends AppCompatActivity {
         titlebar.setText("HN: "+a);
         o.setText("Diet for patient ID: "+patient);
 
-        Toast t = Toast.makeText(DynamicPi.this,patient,Toast.LENGTH_SHORT);
-        t.show();
+        //Toast t = Toast.makeText(DynamicPi.this,patient,Toast.LENGTH_SHORT);
+        //t.show();
 
         int[] arr = pat.getArray(Integer.parseInt(this.patient));
-        int p1=arr[0];
-        int p2=arr[1];
-        int p3=arr[2];
-        int p4=arr[3];
+        int total=0;
+        int  par[]={10,3,4,2};
+        for(int i=0;i<4;i++){
+            total+=par[i];
+        }
+        int p1=(par[0]*100)/total;
+        int  p2=(par[1]*100)/total;
+        int  p3=(par[2]*100)/total;
+        int p4=(par[3]*100)/total;
 
 
         m_Inst.InitGUIFrame(this);
